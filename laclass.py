@@ -13,7 +13,7 @@ class State:
 		state.matrix[swap_idx[0]][swap_idx[1]] = 0
 		return State(g=state.g + 1, matrix=new_matrix)
 
-	def generate_new_state(self, zero_idx: Tuple[int,int]) -> List['State']:
+	def generate_new_states(self, zero_idx: Tuple[int,int]) -> List['State']:
 		new_states: List['State'] = []
 		if zero_idx[0] + 1 > len(self.matrix):
 			swap_idx = (zero_idx[0] + 1, zero_idx[1])
@@ -40,7 +40,11 @@ class Node:
 	def __init__(self, prev: Optional['Node'], state: 'State'):
 		self.state = state
 		self.prev = prev
-		self.g = prev.state.g + 1 if prev is not None else 0
+
+	def change_path(self, g, prev):
+		self.state.g = g
+		self.prev = prev
+
 
 """ 
 fonctions de listes chainees

@@ -24,38 +24,52 @@ def find_cost(current: Node, goal: State) -> int:
 		cost += abs(a[0] - b[0]) + abs(a[1] - b[1])	
 	return cost
 
-def find_best_node(open_list:List[Node], goal: State) -> Node:
-	if len(open_list) == 1:
-		return open_list[0]
-	best_node = open_list[0]
+def find_best_node(opened:List[Node], goal: State) -> Node:
+	if len(opened) == 1:
+		return opened[0]
+	best_node = opened[0]
 	cost = find_cost(best_node, goal)
-	for i in range(1, len(open_list) - 1):
-		tmp = find_cost(open_list[i], goal)
+	for i in range(1, len(opened) - 1):
+		tmp = find_cost(opened[i], goal)
 		if cost > tmp:
 			cost = tmp;
-			state = open_list[i]
+			state = opened[i]
 	return best_node
+
+
+def is_in_list(a_list: List[Node], target: List[List[int]]) -> Node | None:
+	for index, el in enumerate(a_list):
+		if el.state.matrix == target:
+			return el
+	return None
 
 def a_star(puzzle):
 	goal = solution_puzzle(puzzle)
 
-	start_state = State(g=0, matrix=puzzle)
-	start_node = Node(prev=None, state=start_state)
+	root = Node(prev=None, state=State(g=0, matrix=puzzle))
 
-	open_list = [start_node]
-	close_list = []
+	opened = [root]
+	closed = []
 
-	while open_list :
-		current_node = find_best_node(open_list, goal)
-		open_list.remove(current_node)
-		close_list.append(current_node)
-
-		new_states = current_node.state.generate_new_states(get_idx(0))
+	while is_in_list(opened, goal) is None:
+		current = find_best_node(opened, goal)
+		opened.remove(current)
+		closed.append(current)
+		print('Bye')
+		new_states = current.state.generate_new_states(get_idx(current.state, 0))
 		
 		for state in new_states:
-			if open_list
-			child_node = Node(prev=current_node, state=state)
-			open_list.append(child_node)
+			print('Hi')
+			open_ist = is_in_list(opened, state.matrix)
+			close_ist = is_in_list(closed, state.matrix)
+			if open_ist is not None and open_ist.state.g > state.g:
+				open_ist.change_path(state.g, current)
+			elif close_ist is not None and close_ist.state.g > state.g:
+				close_ist.change_path(state.g, current)
+			else:
+				child_node = Node(prev=current, state=state)
+				opened.append(child_node)
+		
 	return 0
 
 def main():
@@ -65,16 +79,8 @@ def main():
 		[7, 3, 0]
 		]
 
-	# opened.append(puzzle)
-	# generate_possible_moves
-	# opened.append(possible_moves)
-	# opened.remove(puzzle)
-	# closed.append(puzzle)
-	# find_cheapest_move(opened)
-	# puzzle = {"state" : [
-	# 	[6, 1, 8], 
-	# 	[2, 5, 4],
-	# 	[7, 0, 3]
-	# 	],
-	# 	"path": [states]}
-	# generate_possible_moves
+	a_star(puzzle)
+	print('hey')
+
+if __name__ == '__main__':
+    main()
